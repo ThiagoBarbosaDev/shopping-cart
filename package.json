@@ -43,7 +43,11 @@
     "mochawesome": "5.0.0",
     "mochawesome-merge": "4.0.3",
     "mochawesome-report-generator": "4.1.0",
+    "node-fetch": "^2.6.7",
     "stylelint": "13.8.0",
     "stylelint-config-standard": "20.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^28.1.0"
   }
 }

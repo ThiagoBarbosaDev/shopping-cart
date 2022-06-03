@@ -12,7 +12,7 @@ const createCustomElement = (element, className, innerText) => {
   return e;
 };
 
-const createProductItemElement = ({ sku, name, image }) => {
+const createProductItemElement = (sku, name, image) => {
   const section = document.createElement('section');
   section.className = 'item';
 
@@ -38,4 +38,12 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
   return li;
 };
 
-window.onload = () => { };
+fetchProducts()
+  .then((data) => data
+    .forEach(({ id: sku, name: title, thumbnail: image }) => { 
+      const itemSection = document.querySelector('.items');
+      const newSection = createProductItemElement(sku, title, image);
+      itemSection.appendChild(newSection);
+    }));
+window.onload = () => { 
+};
