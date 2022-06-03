@@ -12,7 +12,7 @@ const createCustomElement = (element, className, innerText) => {
   return e;
 };
 
-const createProductItemElement = (sku, name, image) => {
+const createProductItemElement = ({ sku, name, image }) => {
   const section = document.createElement('section');
   section.className = 'item';
 
@@ -28,7 +28,6 @@ const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').inn
 
 const cartItemClickListener = (event) => {
   // coloque seu código aqui
-  console.log(event);
 };
 
 const createCartItemElement = ({ sku, name, salePrice }) => {
@@ -39,15 +38,18 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
   return li;
 };
 
-console.log(createCartItemElement);
-console.log(getSkuFromProductItem);
+const appendItem = ({ id, name, thumbnail }) => {
+  // a função  createProductItemElement vai esperar um Obj com chaves com nomes diferentes
+  // Tem algum jeito melhor de renomear/desestruturar as chaves da API para passar como
+  // argumento para a função?
+  const newPc = { sku: id, title: name, image: thumbnail };
+  const itemSection = document.querySelector('.items');
+  const newSection = createProductItemElement(newPc);
+  itemSection.appendChild(newSection);
+};
 
-fetchProducts()
-  .then((data) => data
-    .forEach(({ id: sku, name: title, thumbnail: image }) => { 
-      const itemSection = document.querySelector('.items');
-      const newSection = createProductItemElement(sku, title, image);
-      itemSection.appendChild(newSection);
-    }));
 window.onload = () => { 
+  fetchProducts('computador')
+    .then((data) => [...data.results]
+      .forEach((pc) => appendItem(pc)));
 };
