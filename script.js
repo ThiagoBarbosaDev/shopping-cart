@@ -1,3 +1,5 @@
+// const { fetchItem } = require('./helpers/fetchItem');
+
 const createProductImageElement = (imageSource) => {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -24,11 +26,11 @@ const createProductItemElement = ({ sku, name, image }) => {
   return section;
 };
 
-const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
+// const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
 
-const cartItemClickListener = (event) => {
-  // coloque seu código aqui
-};
+// const cartItemClickListener = (event) => {
+//   // coloque seu código aqui
+// };
 
 const createCartItemElement = ({ sku, name, salePrice }) => {
   const li = document.createElement('li');
@@ -38,18 +40,34 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
   return li;
 };
 
-const appendItem = ({ id, name, thumbnail }) => {
-  // a função  createProductItemElement vai esperar um Obj com chaves com nomes diferentes
-  // Tem algum jeito melhor de renomear/desestruturar as chaves da API para passar como
-  // argumento para a função?
-  const newPc = { sku: id, title: name, image: thumbnail };
+// a função  createProductItemElement vai esperar um Obj com chaves com nomes diferentes
+// Tem algum jeito melhor de renomear/desestruturar as chaves da API para passar como
+// argumento para a função?
+const appendItem = ({ id, name, thumbnail, price }) => {
+  const newPc = { sku: id, title: name, image: thumbnail, salePrice: price };
   const itemSection = document.querySelector('.items');
   const newSection = createProductItemElement(newPc);
+  newSection.lastChild.addEventListener('click', async () => {
+    const idNum = newSection.firstChild.innerText;
+    await fetchItem(idNum)
+      // .then((response) => response.json())   pq quando eu descomento, dá erro quando eu clico no botão?
+      .then((cart) => {
+        const cartOl = document.querySelector('.cart__items');
+        const cartData = { sku: cart.id, name: cart.title, salePrice: cart.price };
+        const newCartLi = createCartItemElement(cartData);
+        cartOl.appendChild(newCartLi);
+      });
+  });
   itemSection.appendChild(newSection);
 };
 
 window.onload = () => { 
   fetchProducts('computador')
-    .then((data) => [...data.results]
-      .forEach((pc) => appendItem(pc)));
+    .then((data) => {
+      [...data.results]
+      .forEach((pc) => {
+        appendItem(pc);
+      });
+    return data.results;
+    });
 };
