@@ -1,4 +1,5 @@
 // const { fetchItem } = require('./helpers/fetchItem');
+const cartOl = document.querySelector('.cart__items');
 
 const createProductImageElement = (imageSource) => {
   const img = document.createElement('img');
@@ -30,6 +31,7 @@ const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').inn
 
 const cartItemClickListener = (event) => {
   // coloque seu código aqui
+  cartOl.removeChild(event.target);
 };
 
 const createCartItemElement = ({ sku, name, salePrice }) => {
@@ -43,21 +45,23 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
 // a função  createProductItemElement vai esperar um Obj com chaves com nomes diferentes
 // Tem algum jeito melhor de renomear/desestruturar as chaves da API para passar como
 // argumento para a função?
-const appendItem = ({ id, name, thumbnail, price }) => {
-  const newPc = { sku: id, title: name, image: thumbnail, salePrice: price };
-  const itemSection = document.querySelector('.items');
-  const newSection = createProductItemElement(newPc);
+const cartAppendLiEventListener = (newSection) => {
   newSection.lastChild.addEventListener('click', async () => {
-    const idNum = newSection.firstChild.innerText;
+    const idNum = (getSkuFromProductItem(newSection));
     await fetchItem(idNum)
-      // .then((response) => response.json())   pq quando eu descomento, dá erro quando eu clico no botão?
       .then((cart) => {
-        const cartOl = document.querySelector('.cart__items');
         const cartData = { sku: cart.id, name: cart.title, salePrice: cart.price };
         const newCartLi = createCartItemElement(cartData);
         cartOl.appendChild(newCartLi);
       });
   });
+};
+
+const appendItem = ({ id, name, thumbnail, price }) => {
+  const newPc = { sku: id, title: name, image: thumbnail, salePrice: price };
+  const itemSection = document.querySelector('.items');
+  const newSection = createProductItemElement(newPc);
+  cartAppendLiEventListener(newSection);
   itemSection.appendChild(newSection);
 };
 
