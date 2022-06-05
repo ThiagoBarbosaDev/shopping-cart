@@ -39,6 +39,7 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  // saveCartItems({ sku, name, salePrice });
   return li;
 };
 
@@ -46,32 +47,38 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
 // Tem algum jeito melhor de renomear/desestruturar as chaves da API para passar como
 // argumento para a função?
 const cartAppendLiEventListener = (newSection) => {
-  newSection.lastChild.addEventListener('click', async () => {
+  const itemButton = newSection.lastChild;
+  itemButton.addEventListener('click', async () => {
     const idNum = (getSkuFromProductItem(newSection));
     await fetchItem(idNum)
       .then((cart) => {
         const cartData = { sku: cart.id, name: cart.title, salePrice: cart.price };
         const newCartLi = createCartItemElement(cartData);
+        saveCartItems(cartData);
         cartOl.appendChild(newCartLi);
       });
   });
 };
 
-const appendItem = ({ id, name, thumbnail, price }) => {
-  const newPc = { sku: id, title: name, image: thumbnail, salePrice: price };
+const appendItem = ({ id, title, thumbnail, price }) => {
+  const newPc = { sku: id, name: title, image: thumbnail, salePrice: price };
   const itemSection = document.querySelector('.items');
   const newSection = createProductItemElement(newPc);
+  // console.log(name);
   cartAppendLiEventListener(newSection);
   itemSection.appendChild(newSection);
 };
 
-window.onload = () => { 
-  fetchProducts('computador')
-    .then((data) => {
-      [...data.results]
-      .forEach((pc) => {
-        appendItem(pc);
-      });
-    return data.results;
+fetchProducts('computador')
+  .then((data) => {
+    [...data.results]
+    .forEach((pc) => {
+      appendItem(pc);
     });
+  return data.results;
+  });
+
+window.onload = () => { 
+  getSavedCartItems(createCartItemElement);
+  // getSavedCartItems();
 };
