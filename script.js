@@ -108,6 +108,15 @@ const renderStorage = () => {
   updateCartTotal();
 };
 
+const emptyCart = () => {
+cartOl.innerHTML = '';
+updateCartTotal();
+saveCartItems();
+};
+
+const buttonEmptyCart = document.querySelector('.empty-cart');
+buttonEmptyCart.addEventListener('click',emptyCart)
+
 window.onload = () => { 
   renderStorage();
   // getSavedCartItems(createCartItemElement);
