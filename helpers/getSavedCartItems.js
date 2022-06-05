@@ -1,4 +1,4 @@
-const getSavedCartItems = () => localStorage.getItem('cartItems');
+const getSavedCartItems = (cartData) => localStorage.getItem('cartItems', cartData);
 
 // Primeiro esboço
 // const getSavedCartItems = (callback) => {
