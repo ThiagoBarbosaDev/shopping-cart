@@ -115,7 +115,7 @@ saveCartItems();
 };
 
 const buttonEmptyCart = document.querySelector('.empty-cart');
-buttonEmptyCart.addEventListener('click',emptyCart)
+buttonEmptyCart.addEventListener('click', emptyCart);
 
 window.onload = () => { 
   renderStorage();
