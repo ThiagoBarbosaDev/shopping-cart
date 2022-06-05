@@ -54,7 +54,8 @@ const cartAppendLiEventListener = (newSection) => {
       .then((cart) => {
         const cartData = { sku: cart.id, name: cart.title, salePrice: cart.price };
         const newCartLi = createCartItemElement(cartData);
-        saveCartItems(cartData);
+        // saveCartItems(cartData);
+        saveCartItems(cartOl.innerHTML);
         cartOl.appendChild(newCartLi);
       });
   });
@@ -79,6 +80,6 @@ fetchProducts('computador')
   });
 
 window.onload = () => { 
-  getSavedCartItems(createCartItemElement);
+  cartOl.innerHTML = getSavedCartItems();
   // getSavedCartItems();
 };
