@@ -72,10 +72,10 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
-  // saveCartItems({ sku, name, salePrice });
   return li;
 };
 
+// pergunta
 // a função  createProductItemElement vai esperar um Obj com chaves com nomes diferentes
 // Tem algum jeito melhor de renomear/desestruturar as chaves da API para passar como
 // argumento para a função?
@@ -88,7 +88,6 @@ const cartAppendLiEventListener = (newSection) => {
       .then((cart) => {
       const cartData = { sku: cart.id, name: cart.title, salePrice: cart.price };
       const newCartLi = createCartItemElement(cartData);
-      // saveCartItems(cartData);
       cartOl.appendChild(newCartLi);
       saveCartItems(cartOl.innerHTML);
       updateCartTotal();
@@ -101,14 +100,14 @@ const appendItem = ({ id, title, thumbnail, price }) => {
   const newPc = { sku: id, name: title, image: thumbnail, salePrice: price };
   const itemSection = document.querySelector('.items');
   const newSection = createProductItemElement(newPc);
-  // console.log(name);
   cartAppendLiEventListener(newSection);
   itemSection.appendChild(newSection);
 };
-
-const fetchHandler = async () => {
+// Pergunta: Pq quando eu uso o responde a função não funciona?
+const renderItems = async () => {
   createLoading();
   await fetchProducts('computador')
+    // .then((response) => response.JSON())
     .then((data) => {
       removeLoading(); [...data.results]
       .forEach((pc) => {
@@ -127,14 +126,13 @@ const renderStorage = () => {
 const emptyCart = () => {
 cartOl.innerHTML = '';
 updateCartTotal();
-saveCartItems();
+localStorage.removeItem('cartItems');
 };
 
 const buttonEmptyCart = document.querySelector('.empty-cart');
 buttonEmptyCart.addEventListener('click', emptyCart);
 
 window.onload = () => { 
-  fetchHandler();
+  renderItems();
   renderStorage();
-  // getSavedCartItems(createCartItemElement);
 };
