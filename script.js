@@ -46,8 +46,7 @@ const updateCartTotal = () => {
   const cartItemList = Array.from(document.querySelectorAll('.cart__item'));
   let sum = 0;
   cartItemList.forEach((item) => {
-  const spliceIndex = item.innerText.indexOf('PRICE: $') + 'PRICE: $'.length;
-  const itemPrice = parseFloat(item.innerText.slice(spliceIndex), 10);
+  const itemPrice = parseFloat(item.innerText.split('$')[1], 10);
   sum += itemPrice;
 });
   totalPrice.innerText = Math.round((sum + Number.EPSILON) * 100) / 100;
@@ -62,6 +61,7 @@ const updateCartTotal = () => {
 
 const cartItemClickListener = (event) => {
   // coloque seu código aqui
+ console.log(event.target.innerHTML)
   cartOl.removeChild(event.target);
   updateCartTotal();
   saveCartItems(cartOl.innerHTML);
